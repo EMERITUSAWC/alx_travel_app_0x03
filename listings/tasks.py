@@ -1,8 +1,9 @@
-from alx_travel_app.celery_app import app
+from celery import shared_task
+from django.core.mail import send_mail
 
-@app.task
-def send_booking_confirmation_email(booking_id):
-    # Replace this print with actual email logic
-    print(f"Sending booking confirmation email for booking ID: {booking_id}")
-    return True
-
+@shared_task
+def send_booking_confirmation_email(booking_id, user_email):
+    subject = "Booking Confirmation"
+    message = f"Your booking with ID {booking_id} was successful!"
+    send_mail(subject, message, "noreply@travelapp.com", [user_email])
+    return f"Confirmation email sent to {user_email}"
